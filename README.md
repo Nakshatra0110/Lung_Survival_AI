@@ -112,31 +112,33 @@ Raw Data
 
 ## Dataset Setup
 
-> ⚠️ **The dataset is NOT included in this repository** due to file size constraints. You must download all three data types from the TCGA GDC Portal manually.
+> ⚠️ **The dataset is NOT included in this repository** due to file size constraints. You must download all three data types manually from the sources below.
 
-### Step 1 — Download Gene Expression Data
+### Step 1 — Download Gene Expression Data (UCSC Xena)
 
-1. Go to **[GDC Data Portal](https://portal.gdc.cancer.gov/)**
-2. Click **Repository** → Filter by:
-   - **Project:** `TCGA-LUAD`
-   - **Data Category:** `Transcriptome Profiling`
-   - **Data Type:** `Gene Expression Quantification`
-   - **Workflow Type:** `STAR - Counts` or `HTSeq - FPKM`
-3. Add all files to cart → Download as **TSV**
-4. Save as `data/gene_expression.tsv`
+1. Go to **[UCSC Xena Browser — TCGA-LUAD](https://xenabrowser.net/datapages/?cohort=TCGA%20Lung%20Adenocarcinoma%20(LUAD))**
+2. Under **Gene Expression**, click **STAR - Counts (n=589)** → Download
+3. Rename the downloaded file to `gene_expression.tsv`
+4. Place it at `data/gene_expression.tsv`
 
-### Step 2 — Download Clinical Data
+> The file has genes as rows (Ensembl IDs like `ENSG00000000003.15`) and 589 samples as columns (`TCGA-XX-XXXX-01A` format). This is exactly what the code expects.
 
-1. On the same GDC Portal, go to **Projects → TCGA-LUAD**
-2. Click **Clinical** tab → Download **TSV**
-3. Save as `data/clinical.tsv`
+### Step 2 — Download Clinical Data (UCSC Xena)
 
-### Step 3 — Download CT Scans (DICOM)
+1. On the same UCSC Xena page, under **Phenotype**, click **TCGA-LUAD phenotype** → Download
+2. Rename to `clinical.tsv`
+3. Place it at `data/clinical.tsv`
 
-1. Go to **[TCIA Collections — TCGA-LUAD](https://wiki.cancerimagingarchive.net/display/Public/TCGA-LUAD)**
-2. Download the **NBIA Data Retriever** tool
-3. Download CT scans for TCGA-LUAD patients
-4. Place DICOM folders under `data/raw_ct/TCGA-XX-XXXX/` (one folder per patient)
+> The file has 721 rows and 89 columns including `submitter_id` (patient ID), `days_to_death.demographic`, `vital_status.demographic`, `age_at_diagnosis.diagnoses`, `ajcc_pathologic_stage.diagnoses`, and `pack_years_smoked.exposures`. All required columns are present.
+
+### Step 3 — Download CT Scans (TCIA — 19GB)
+
+1. Go to **[TCIA — TCGA-LUAD Collection](https://wiki.cancerimagingarchive.net/display/Public/TCGA-LUAD)**
+2. Download and install the **NBIA Data Retriever**
+3. Download the full TCGA-LUAD CT collection (~19GB)
+4. Place the DICOM folders at `data/raw_ct/` — each subfolder must be named with the TCGA patient ID
+
+> ⚠️ **Critical:** Verify that the top-level folders are named in `TCGA-XX-XXXX` format (e.g. `TCGA-38-7271/`). If folders are named with DICOM UIDs (long number strings), the patient ID matching will fail. Check inside the download for a `metadata.csv` that maps UIDs to patient IDs.
 
 ### Step 4 — Download MedicalNet Pretrained Weights
 
@@ -145,10 +147,10 @@ pip install huggingface_hub
 python -c "from huggingface_hub import hf_hub_download; hf_hub_download(repo_id='TencentMedicalNet/MedicalNet-Resnet10', filename='resnet_10_23dataset.pth', local_dir='trained_models')"
 ```
 
-### Step 5 — Download ResNet definition file
+### Step 5 — Download ResNet Definition File
 
 ```powershell
-curl -L -o resnet.py https://raw.githubusercontent.com/Tencent/MedicalNet/master/models/resnet.py
+curl.exe -L -o resnet.py https://raw.githubusercontent.com/Tencent/MedicalNet/master/models/resnet.py
 ```
 
 ### Expected Data Directory Structure
@@ -156,13 +158,13 @@ curl -L -o resnet.py https://raw.githubusercontent.com/Tencent/MedicalNet/master
 ```
 lung_survival_transformer/
 ├── data/
-│   ├── gene_expression.tsv          ← downloaded from GDC
-│   ├── clinical.tsv                 ← downloaded from GDC
+│   ├── gene_expression.tsv          ← UCSC Xena STAR-FPKM-UQ (n=589)
+│   ├── clinical.tsv                 ← UCSC Xena TCGA-LUAD phenotype
 │   └── raw_ct/
-│       ├── TCGA-38-7271/            ← DICOM folders per patient
+│       ├── TCGA-38-7271/            ← DICOM folders named by patient ID
 │       ├── TCGA-44-2659/
-│       └── ...
-├── resnet.py                        ← downloaded from MedicalNet
+│       └── ...                      ← ~31 patients with CT scans
+├── resnet.py                        ← downloaded from MedicalNet GitHub
 └── trained_models/
     └── resnet_10_23dataset.pth      ← downloaded from HuggingFace (~57.5 MB)
 ```
@@ -364,7 +366,7 @@ If you use this code in your research, please cite:
 6. MedicalNet (Tencent Research): https://github.com/Tencent/MedicalNet
 
 ---
-Still working to improve it
+
 <div align="center">
 
 </div>
