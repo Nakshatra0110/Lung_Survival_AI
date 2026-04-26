@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+
+data/
+trained_models/
+
+*.pth
+*.npy
+
+.cache/
+.env
