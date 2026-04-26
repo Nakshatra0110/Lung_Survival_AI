@@ -367,8 +367,4 @@ If you use this code in your research, please cite:
 Still working to improve it
 <div align="center">
 
-**Bennett University | School of CSE&T | 2025–2026**
-
-Made with PyTorch · Streamlit · MedicalNet · TCGA-LUAD
-
 </div>
