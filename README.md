@@ -289,14 +289,12 @@ The app opens at `http://localhost:8501` and provides:
 |---|---|---|
 | Training patients | 21 | 70% of 31 total |
 | Validation patients | 10 | 30% of 31 total |
-| Best C-index | ~0.68 | Limited by N=21 training patients |
+| Best C-index | ~0.58 | Limited by N=21 training patients |
 | Trainable parameters | ~107K | Out of 6.92M total |
 | Frozen parameters | ~6.81M | MedicalNet + Gene AE |
 | CT gate weight | ~33% | Roughly equal fusion |
 | Gene gate weight | ~34% | Slightly dominant |
 | Clinical gate weight | ~33% | Active contribution |
-
-> **Important context:** A C-index of 0.68 is above random (0.5). This is **expected** at N=21 training patients and is a data limitation, not an architectural failure. Published literature achieves C-index 0.65–0.71 with 200–500 matched patients using the same type of architecture.
 
 ## Technology Stack
 
